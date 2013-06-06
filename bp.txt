@@ -1,0 +1,122 @@
+function find(v alue V )
+/* Returns leaf node C and index i such that C . Pi points to first record
+* with search key value V */
+     Set C = root node
+     while (C is not a leaf node) begin
+            Let i = smallest number such that V  C . K i
+            if there is no such number i then begin
+                    Let Pm = last non-null pointer in the node
+                    Set C = C . Pm
+            end
+            else if (V = C . K i )
+                    then Set C = C . Pi +1
+            else C = C . Pi /* V < C . K i */
+     end
+     /* C is a leaf node */
+     Let i be the least value such that K i = V
+     if there is such a value i
+            then return (C , i )
+            else return null ; /* No record with key value V exists*/
+
+procedure printAll(v alue V )
+/* prints all records with search key value V */
+     Set done = false;
+     Set ( L , i ) = find(V );
+     if (( L , i ) is null) return
+     repeat
+            repeat
+                    Print record pointed to by L . Pi
+                    Set i = i + 1
+            until (i > number of keys in L or L . K i > V )
+            if (i > number of keys in L )
+                    then L = L . Pn
+                    else Set done = true;
+     until (done or L is null)
+
+procedure insert(v alue K , pointer P )
+    if (tree is empty) create an empty leaf node L , which is also the root
+    else Find the leaf node L that should contain key value K
+    if ( L has less than n - 1 key values)
+          then insert in leaf ( L , K , P )
+          else begin /* L has n - 1 key values already, split it */
+                Create node L
+                Copy L . P1 . . . L . K n-1 to a block of memory T that can
+                      hold n (pointer, key-value) pairs
+                insert in leaf (T , K , P )
+                Set L . Pn = L . Pn ; Set L . Pn = L
+                Erase L . P1 through L . K n-1 from L
+                Copy T . P1 through T . K n/2 from T into L starting at L . P1
+                Copy T . P n/2 +1 through T . K n from T into L starting at L . P1
+                Let K be the smallest key-value in L
+                insert in parent( L , K , L )
+          end
+
+procedure insert in leaf (node L , v alue K , pointer P )
+    if ( K < L . K 1 )
+          then insert P , K into L just before L . P1
+          else begin
+                Let K i be the highest value in L that is less than K
+                Insert P , K into L just after T . K i
+          end
+
+procedure insert in parent(node N, v alue K , node N )
+    if ( N is the root of the tree)
+          then begin
+                Create a new node R containing N, K , N /* N and N are pointers */
+                Make R the root of the tree
+                return
+          end
+    Let P = parent ( N)
+    if ( P has less than n pointers)
+          then insert ( K , N ) in P just after N
+          else begin /* Split P */
+                Copy P to a block of memory T that can hold P and ( K , N )
+                Insert ( K , N ) into T just after N
+                Erase all entries from P ; Create node P
+                Copy T . P1 . . . T . P n/2 into P
+                Let K = T . K n/2
+                Copy T . P n/2 +1 . . . T . Pn+1 into P
+                insert in parent( P , K , P )
+          end
+
+procedure delete(v alue K , pointer P )
+   find the leaf node L that contains ( K , P )
+   delete entry( L , K , P )
+
+procedure delete entry(node N, v alue K , pointer P )
+   delete ( K , P ) from N
+   if ( N is the root and N has only one remaining child)
+   then make the child of N the new root of the tree and delete N
+   else if ( N has too few values/pointers) then begin
+        Let N be the previous or next child of parent ( N)
+        Let K be the value between pointers N and N in parent ( N)
+        if (entries in N and N can fit in a single node)
+            then begin /* Coalesce nodes */
+                 if ( N is a predecessor of N ) then swap variables( N, N )
+                 if ( N is not a leaf)
+                      then append K and all pointers and values in N to N
+                      else append all ( K i , Pi ) pairs in N to N ; set N . Pn = N. Pn
+                 delete entry(parent ( N), K , N); delete node N
+            end
+        else begin /* Redistribution: borrow an entry from N */
+            if ( N is a predecessor of N) then begin
+                 if ( N is a nonleaf node) then begin
+                      let m be such that N . Pm is the last pointer in N
+                      remove ( N . K m-1 , N . Pm ) from N
+                      insert ( N . Pm , K ) as the first pointer and value in N,
+                          by shifting other pointers and values right
+                      replace K in parent ( N) by N . K m-1
+                 end
+                 else begin
+                      let m be such that ( N . Pm , N . K m ) is the last pointer/value
+                          pair in N
+                      remove ( N . Pm , N . K m ) from N
+                      insert ( N . Pm , N . K m ) as the first pointer and value in N,
+                          by shifting other pointers and values right
+                      replace K in parent ( N) by N . K m
+                 end
+            end
+            else . . . symmetric to the then case . . .
+        end
+   end
+

@@ -1,0 +1,5 @@
+indexes
+    tradeoff between dense and sparse
+    a good choice is to use one index per block
+        you have to grab a block anyway
+        and then use pointers to next items to find the desired key
