@@ -1,6 +1,5 @@
 from collections import deque
-
-import simplejson as json
+import json
 
 from config import servers
 from ipc import bcast
