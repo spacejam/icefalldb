@@ -3,17 +3,9 @@
     icefall - distributed database
 
     bully (lowest start epoch|host|pid) for election
-    paxos for serialization
-    2pc for consensus
-    merkle trees for consistency
+    zab for serialization
+    merkle trees for anti-entropy
     b+ for persistance
-
-    on node start, in 'unverified' state
-    use paxos to see if my last entry is correct
-    if so, become verified
-    if not, initiate replay with fastest responder
-
-    drop into unverified when
 """
 
 import sys
