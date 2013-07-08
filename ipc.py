@@ -1,7 +1,7 @@
 import sys
 import socket
 
-import simplejson as json
+import json
 
 from config import servers
 from logger import log_verbose
