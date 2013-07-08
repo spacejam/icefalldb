@@ -44,6 +44,7 @@ def server(num):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(servers[num])
     while True:
+        #TODO semireliable recv
         raw_data, addr = sock.recvfrom(1024)
         data = json.loads(raw_data)
         yield (data, sock, addr)
